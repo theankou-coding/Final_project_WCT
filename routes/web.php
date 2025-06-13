@@ -8,22 +8,23 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ReviewController;
 
+// Home page route (GET only)
+// DO NOT use POST requests to this route from your frontend.
 Route::get('/', function () {
     return view('welcome');
 });
+//
+Route::post('/', function () {    // handle POST to /
+    return response()->json(['message' => 'POST received at /']);
+});
+
 
 // Auth routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Protected routes
+// Protected routes (JWT authentication required)
 Route::middleware('jwt.auth')->group(function () {
-    // Route::get('/user', function () {
-    //     return response()->json($user = JWTAuth::user());
-    // });
-
-    // Route::middleware('admin')->group(function () {
-
     // Admin routes
     Route::get('/admins', [AdminController::class, 'index']);
     Route::post('/admins', [AdminController::class, 'store']);
@@ -58,4 +59,3 @@ Route::middleware('jwt.auth')->group(function () {
     Route::patch('/reviews/{id}', [ReviewController::class, 'update']);
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 });
-// });
